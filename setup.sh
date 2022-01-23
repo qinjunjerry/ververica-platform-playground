@@ -6,9 +6,10 @@ set -o pipefail
 
 HELM=${HELM:-helm}
 VVP_CHART=${VVP_CHART:-}
+VVP_CHART_VERSION=${VVP_CHART_VERSION:-"5.2.2"}
 
 VVP_NAMESPACE=${VVP_NAMESPACE:-vvp}
-JOBS_NAMESPACE=${JOBS_NAMESPACE:-"vvp-jobs"}
+JOBS_NAMESPACE=${JOBS_NAMESPACE:-"flink"}
 
 usage() {
   echo "This script installs Ververica Platform as well as its dependencies into a Kubernetes cluster using Helm."
@@ -85,6 +86,7 @@ install_kibana() {
 helm_install_vvp() {
   if [ -n "$VVP_CHART" ];  then
     helm_install vvp "$VVP_CHART" "$VVP_NAMESPACE" \
+      --version "$VVP_CHART_VERSION" \
       --values values-vvp.yaml \
       --set rbac.additionalNamespaces="{$JOBS_NAMESPACE}" \
       --set vvp.blobStorage.s3.endpoint="http://minio.$VVP_NAMESPACE.svc:9000" \
@@ -92,6 +94,7 @@ helm_install_vvp() {
   else
     helm_install vvp ververica-platform "$VVP_NAMESPACE" \
       --repo https://charts.ververica.com \
+      --version "$VVP_CHART_VERSION" \
       --values values-vvp.yaml \
       --set rbac.additionalNamespaces="{$JOBS_NAMESPACE}" \
       --set vvp.blobStorage.s3.endpoint="http://minio.$VVP_NAMESPACE.svc:9000" \

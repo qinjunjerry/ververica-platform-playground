@@ -7,7 +7,7 @@ set -o pipefail
 HELM=${HELM:-helm}
 
 VVP_NAMESPACE=${VVP_NAMESPACE:-vvp}
-JOBS_NAMESPACE=${JOBS_NAMESPACE:-"vvp-jobs"}
+JOBS_NAMESPACE=${JOBS_NAMESPACE:-"flink"}
 
 helm_uninstall() {
   local release

@@ -1,5 +1,72 @@
 vvp:
 
+  # auth:
+  #   enabled: true
+  #   admins:
+  #     - user:user@example.com
+
+  #   bootstrapToken:
+  #    token: dmVydmVyaWNhLmNvbS9jYXJlZXJz
+
+  #   oidc:
+  #    registrationId: google
+  #    registration:
+  #      clientId: client-id-from-provider
+  #      clientSecret: secret-from-provider
+  #    provider:
+  #      userNameAttribute: email
+
+
+  # auth:
+  #   enabled: true
+  #   admins:
+  #   - user:admin
+  #   oidc:
+  #     groupsClaim: cognito:groups
+  #     registrationId: vvp
+  #     registration:
+  #       clientId: 4b7ij4lsi64er0fovu2m7ublfe
+  #       clientSecret: een0ou3r43t4kv85065bs828i1sbfht93rdhmockqrn9f6i1mfl
+  #       redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+  #       clientAuthenticationMethod: basic
+  #       authorizationGrantType: authorization_code
+  #       scope:
+  #         - openid
+  #         - profile
+  #     provider:
+  #       # Verify by GET https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_jwUsJ0lJC/.well-known/openid-configuration
+  #       issuerUri: https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_jwUsJ0lJC
+  #       userNameAttribute: username
+  #     endSessionEndpoint: "https://demoidp.auth.eu-central-1.amazoncognito.com/logout?client_id=4b7ij4lsi64er0fovu2m7ublfe&redirect_uri=http://localhost:8080/login/oauth2/code/vvp&response_type=code"
+
+  # Auth with Azure AD azurekeyvalue-cluster-sp
+  auth:
+    enabled: true
+    admins:
+    - user:jun@nicoververica.onmicrosoft.com
+    oidc:
+      # the following two lines are optional: groups/vvp are the default values
+      groupsClaim: roles
+      registrationId: vvp
+      registration:
+        clientId: 9d889623-7af5-408e-8969-f8a8780fa9b6
+        clientSecret: 9oz7zsQbP75xN.C_CNvEyQZLoFaX8v2ZdH
+        redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+        clientAuthenticationMethod: basic
+        authorizationGrantType: authorization_code
+        scope:
+        - openid
+        - profile
+      provider:
+        issuer-uri: https://login.microsoftonline.com/2925ee25-3bd0-402a-88f1-69307e6a39f3/v2.0
+        # make sure, spring-boot does not fetch user info
+        # see https://github.com/spring-projects/spring-security/issues/7679
+        user-info-uri:
+        userNameAttribute: preferred_username
+        endSessionEndpoint: "https://login.microsoftonline.com/common/oauth2/v2.0/logout"
+        # endSessionEndpoint: "https://login.microsoftonline.com/common/oauth2/v2.0/logout?client_id=9d889623-7af5-408e-8969-f8a8780fa9b6&redirect_uri=http://localhost:8080/login/oauth2/code/vvp&response_type=code"
+
+
   ### Configure VVP to use a local SQLite database
   persistence:
     type: local
@@ -57,3 +124,11 @@ gateway:
       memory: 1Gi
     requests:
       memory: 1Gi
+
+env:
+  - name: "spring.servlet.multipart.max-file-size"
+    value: "150MB"
+  - name: "spring.servlet.multipart.max-request-size"
+    value: "151MB"
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
+    value: DEBUG
